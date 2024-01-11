@@ -1,6 +1,7 @@
 import torch
 from torchvision import datasets, transforms
 import matplotlib.pyplot as plt
+from torchsummary import summary
 
 def create_mnist_dataloader():
     # Train data transformations
@@ -51,3 +52,6 @@ def get_dataset_images(train_loader, total_images=12):
         plt.title(batch_label[i].item())
         plt.xticks([])
         plt.yticks([])
+
+def get_model_summary(model, device):
+    return summary(model, input_size=(1, 28, 28))
