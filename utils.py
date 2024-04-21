@@ -38,6 +38,26 @@ def create_mnist_dataloader(batch_size):
     train_loader = torch.utils.data.DataLoader(train_data, **kwargs)
     return train_loader, test_loader
 
+def create_mnist_dataloader_6(batch_size):
+    # Train data transformations
+    # We train on complicated data by applying transformations to introduce Noise
+
+    kwargs = {'batch_size': batch_size, 'shuffle': True, 'num_workers': 2, 'pin_memory': True}
+
+    train_loader = torch.utils.data.DataLoader(
+    datasets.MNIST('../data', train=True, download=True,
+                    transform=transforms.Compose([
+                        transforms.ToTensor(),
+                        transforms.Normalize((0.1307,), (0.3081,))
+                    ])), **kwargs)
+    test_loader = torch.utils.data.DataLoader(
+        datasets.MNIST('../data', train=False, transform=transforms.Compose([
+                            transforms.ToTensor(),
+                            transforms.Normalize((0.1307,), (0.3081,))
+                        ])), **kwargs)
+
+    return train_loader, test_loader
+
 def get_dataset_images(train_loader, total_images=12):
     batch_data, batch_label = next(iter(train_loader))
 
