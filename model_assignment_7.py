@@ -69,3 +69,12 @@ class Net1(nn.Module):
         x = x.view(len(x), 10)
         
         return F.log_softmax(x, dim=1)
+
+# Target - To get the skeleton for the model
+# Results - Parameters: 394K
+# Best Train Accuracy: 99.70
+# Best Test Accuracy: 99.01 (20th Epoch), 98.97 (20th Epoch)
+# Analysis:
+# If Receptive field of image is not met, model does not start learning.
+# Seems a good skeleton, but has hit the overfitting by end.
+# Number of parameters are high
