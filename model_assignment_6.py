@@ -26,7 +26,7 @@ class Net(nn.Module):
 class Net2(nn.Module):
     #This defines the structure of the NN.
     def __init__(self):
-        super(Net3, self).__init__()
+        super(Net2, self).__init__()
         self.conv1 = nn.Conv2d(1, 32, kernel_size=3)
         self.conv2 = nn.Conv2d(32, 64, kernel_size=3)
         self.pool1 = nn.MaxPool2d(2, 2)
@@ -49,7 +49,7 @@ class Net2(nn.Module):
 class Net3(nn.Module):
     #This defines the structure of the NN.
     def __init__(self):
-        super(Net, self).__init__()
+        super(Net3, self).__init__()
         self.conv1 = nn.Conv2d(1, 4, kernel_size=3, padding=1)
         self.batchnorm1 = nn.BatchNorm2d(4)
         self.conv2 = nn.Conv2d(4, 8, kernel_size=3, padding=1)
