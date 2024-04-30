@@ -3,7 +3,7 @@ from torchvision import datasets, transforms
 import matplotlib.pyplot as plt
 from torchsummary import summary
 
-def create_mnist_dataloader(batch_size):
+def create_mnist_dataloader_trans(batch_size):
     # Train data transformations
     # We train on complicated data by applying transformations to introduce Noise
     train_transforms = transforms.Compose([
@@ -38,7 +38,7 @@ def create_mnist_dataloader(batch_size):
     train_loader = torch.utils.data.DataLoader(train_data, **kwargs)
     return train_loader, test_loader
 
-def create_mnist_dataloader_6(batch_size):
+def create_mnist_dataloader_norm(batch_size):
     # Train data transformations
     # We train on complicated data by applying transformations to introduce Noise
 
@@ -54,6 +54,24 @@ def create_mnist_dataloader_6(batch_size):
         datasets.MNIST('../data', train=False, transform=transforms.Compose([
                             transforms.ToTensor(),
                             transforms.Normalize((0.1307,), (0.3081,))
+                        ])), **kwargs)
+
+    return train_loader, test_loader
+
+def create_mnist_dataloader(batch_size):
+    # Train data transformations
+    # We train on complicated data by applying transformations to introduce Noise
+
+    kwargs = {'batch_size': batch_size, 'shuffle': True, 'num_workers': 2, 'pin_memory': True}
+
+    train_loader = torch.utils.data.DataLoader(
+    datasets.MNIST('../data', train=True, download=True,
+                    transform=transforms.Compose([
+                        transforms.ToTensor()
+                    ])), **kwargs)
+    test_loader = torch.utils.data.DataLoader(
+        datasets.MNIST('../data', train=False, transform=transforms.Compose([
+                            transforms.ToTensor()
                         ])), **kwargs)
 
     return train_loader, test_loader
