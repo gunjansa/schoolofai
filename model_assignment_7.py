@@ -83,7 +83,7 @@ class Net1(nn.Module):
 class Net2(nn.Module):
     #This defines the structure of the NN.
     def __init__(self):
-        super(Net1, self).__init__()
+        super(Net2, self).__init__()
         # RF = RF + (jin * (kernel-1))
         # jin = jin * stride
         # For MaxPool, kernel = 2 and stride = 2
@@ -156,3 +156,82 @@ class Net2(nn.Module):
 # Seems there is some loss of data due to convolution which got covered by padding in the first convolution layer
 # If padding is added in all the layers, this architecture behaved badly.
 # Number of parameters are high
+
+class Net3(nn.Module):
+    #This defines the structure of the NN.
+    def __init__(self):
+        super(Net3, self).__init__()
+        # RF = RF + (jin * (kernel-1))
+        # jin = jin * stride
+        # For MaxPool, kernel = 2 and stride = 2
+        dropout_value = 0.1
+        self.convblock1 = nn.Sequential(
+            nn.Conv2d(in_channels=1, out_channels=16, kernel_size=(3, 3), padding=3, bias=False),
+            nn.ReLU(),
+            nn.BatchNorm2d(16)
+        ) # output_size = 26, RF = 3, jin=1
+
+        self.convblock2 = nn.Sequential(
+            nn.Conv2d(in_channels=16, out_channels=32, kernel_size=(3, 3), padding=0, bias=False),
+            nn.ReLU(),
+            nn.BatchNorm2d(32)
+        ) # output_size = 24, RF = 5, jin=1
+
+        self.pool1 = nn.MaxPool2d(2, 2) # output_size = 12, RF = 6, jin = 2
+
+        self.convblock5 = nn.Sequential(
+            nn.Conv2d(in_channels=32, out_channels=64, kernel_size=(3, 3), padding=0, bias=False),
+            nn.ReLU(),
+            nn.BatchNorm2d(64)
+        ) # output_size = 10, RF = 10, jin=2
+
+        self.pool2 = nn.MaxPool2d(2, 2) # output_size = 5, RF = 12, jin = 2
+
+        self.convblock7 = nn.Sequential(
+            nn.Conv2d(in_channels=64, out_channels=32, kernel_size=(3, 3), padding=0, bias=False),
+            nn.ReLU(),
+            nn.BatchNorm2d(32)
+        ) # output_size = 3, RF = 20, jin=4
+
+        self.convblock8 = nn.Sequential(
+            nn.Conv2d(in_channels=32, out_channels=16, kernel_size=(3, 3), padding=0, bias=False),
+            nn.ReLU(),
+            nn.BatchNorm2d(16)
+        ) # output_size = 1, RF = 28, jin=4
+        
+        # CONV and GAP
+        self.convblock9 = nn.Sequential(
+            nn.Conv2d(in_channels=16, out_channels=10, kernel_size=(1, 1), padding=0, bias=False),
+            nn.ReLU()
+        ) # output_size = 1, RF = 28
+
+        # OUTPUT BLOCK
+        output_size_after_averaging = 1
+        self.gap = nn.Sequential(
+            nn.AdaptiveAvgPool2d(output_size_after_averaging)
+        ) # output_size = 1
+
+    def forward(self, x):
+        x = self.convblock1(x)
+        x = self.convblock2(x)
+        x = self.pool1(x)
+        x = self.convblock5(x)
+        x = self.pool2(x)
+        x = self.convblock7(x)
+        x = self.convblock8(x)
+
+        x = self.convblock9(x)
+        x = self.gap(x)
+
+        x = x.view(len(x), 10)
+        
+        return F.log_softmax(x, dim=1)
+
+# Target - To reduce number of parameters
+# Results - Parameters: 46K
+# Best Train Accuracy: 100.00
+# Best Test Accuracy: 99.45 (20th Epoch), 99.33 (20th Epoch)
+# Analysis:
+# Reduced parameters in every layer and accuracy dropped in initial epochs but reached the similar one.
+# Slow learning => Introduced BatchNorm
+# Learning accelerated but number of parameters are still high
