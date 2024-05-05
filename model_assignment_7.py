@@ -72,8 +72,8 @@ class Net1(nn.Module):
 
 # Target - To get the skeleton for the model
 # Results - Parameters: 394K
-# Best Train Accuracy: 99.70
-# Best Test Accuracy: 99.01 (20th Epoch), 98.97 (20th Epoch)
+# Best Train Accuracy: 68
+# Best Test Accuracy: 70 (20th Epoch)
 # Analysis:
 # If Receptive field of image is not met, model does not start learning.
 # Seems a good skeleton, but has hit the overfitting by end.
@@ -150,8 +150,8 @@ class Net2(nn.Module):
 
 # Target - To get the skeleton for the model - Added Padding in the first convolution layer
 # Results - Parameters: 394K
-# Best Train Accuracy: 99.70
-# Best Test Accuracy: 99.01 (20th Epoch), 98.97 (20th Epoch)
+# Best Train Accuracy: 99.17
+# Best Test Accuracy: 98.85 (20th Epoch), 98.94 (20th Epoch)
 # Analysis:
 # Seems there is some loss of data due to convolution which got covered by padding in the first convolution layer
 # If padding is added in all the layers, this architecture behaved badly.
